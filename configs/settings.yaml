@@ -1,0 +1,73 @@
+# configs/settings.yaml
+
+# Default data extraction settings
+default_fetch_type: SUPPLYHR_DATA
+default_months_to_backfill: 6
+auto_detect_schema: true
+
+# Directory structure
+file_paths:
+  raw_data_dir: data/raw/
+  clean_data_dir: data/clean/
+  logs_dir: data/logs/
+
+# BigQuery configuration
+bigquery:
+  dataset: power_outages
+  table: msedcl_outages_clean
+  location: asia-south1
+  write_disposition: WRITE_APPEND
+  partition_by: collected_at
+  clustering_fields:
+    - division
+    - region
+    - collected_at
+
+# Dashboard settings
+dashboard:
+  filters:
+    - region
+    - zone
+    - division
+    - circle
+  kpis:
+    - total_outages
+    - total_supply_hours
+    - reliability_index
+    - variance_score
+
+# Transformation rules
+data_cleaning:
+  time_columns:
+    - week1_outage_hrs_per_feeder_day
+    - week2_outage_hrs_per_feeder_day
+    - week3_outage_hrs_per_feeder_day
+    - week4_outage_hrs_per_feeder_day
+    - week5_outage_hrs_per_feeder_day
+    - week1_supply_hrs_per_feeder_day
+    - week2_supply_hrs_per_feeder_day
+    - week3_supply_hrs_per_feeder_day
+    - week4_supply_hrs_per_feeder_day
+    - week5_supply_hrs_per_feeder_day
+  numeric_columns:
+    - week1_total_outages
+    - week2_total_outages
+    - week3_total_outages
+    - week4_total_outages
+    - week5_total_outages
+    - week1_duration_mins
+    - week2_duration_mins
+    - week3_duration_mins
+    - week4_duration_mins
+    - week5_duration_mins
+  string_columns:
+    - region
+    - zone
+    - circle
+    - division
+
+# Logging
+log_settings:
+  level: INFO
+  max_log_size_mb: 5
+  log_rotation_days: 7
