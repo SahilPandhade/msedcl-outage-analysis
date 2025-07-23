@@ -51,6 +51,8 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
   volumes:
+    - .:/opt/airflow
+    - ./urja-drishti-key.json:/opt/airflow/urja-drishti-key.json
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
@@ -88,6 +90,14 @@ services:
     restart: always
 
   airflow-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/opt/airflow
+      - ./urja-drishti-key.json:/opt/airflow/urja-drishti-key.json
+    env_file:
+      - .env
     <<: *airflow-common
     command: webserver
     ports:
@@ -100,6 +110,14 @@ services:
     restart: always
 
   airflow-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/opt/airflow
+      - ./urja-drishti-key.json:/opt/airflow/urja-drishti-key.json
+    env_file:
+      - .env
     <<: *airflow-common
     command: scheduler
     restart: always
@@ -110,6 +128,13 @@ services:
     restart: always
 
   airflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/opt/airflow
+    env_file:
+      - .env
     <<: *airflow-common
     command: version
     environment:

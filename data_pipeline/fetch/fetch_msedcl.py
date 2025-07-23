@@ -19,7 +19,7 @@ def get_current_month_code():
     today = datetime.today()
     return f"{today.year % 100:02d}{today.month:02d}"
 
-def fetch_msedcl_outage_data(fetch_month="2505", fetch_type=DEFAULT_FETCH_TYPE):
+def fetch_msedcl_outage_data(fetch_month, fetch_type=DEFAULT_FETCH_TYPE):
     fetch_month = fetch_month or get_current_month_code()
 
     payload = {
@@ -55,7 +55,8 @@ def fetch_msedcl_outage_data(fetch_month="2505", fetch_type=DEFAULT_FETCH_TYPE):
 
     df = pd.DataFrame(raw_data['data'], columns=columns[:len(raw_data['data'][0])])
     df["collected_at"] = datetime.now(timezone.utc).isoformat()
-
+    df["fetch_month"] = (fetch_month)
+    # print(df)
     os.makedirs(RAW_DATA_DIR, exist_ok=True)
     date_tag = datetime.today().strftime("%Y-%m-%d")
 

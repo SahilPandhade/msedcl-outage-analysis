@@ -1,0 +1,6 @@
+python-dotenv
+pandas
+requests
+google-cloud-bigquery
+db-dtypes
+PyYAML

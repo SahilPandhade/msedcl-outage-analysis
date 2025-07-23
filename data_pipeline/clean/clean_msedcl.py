@@ -43,9 +43,11 @@ def clean_msedcl_dataframe(df):
         if col in df.columns:
             df[f"{col}_decimal"] = df[col].apply(convert_time_to_decimal)
 
-    df["collected_at"] = pd.to_datetime(df.get("collected_at", datetime.now(timezone.utc).isoformat()))
+    if "collected_at" in df.columns:
+      df["collected_at"] = pd.to_datetime(df["collected_at"])
+    else:
+      df["collected_at"] = datetime.now(timezone.utc).isoformat()
     df["processed_at"] = datetime.now(timezone.utc).isoformat()
-
     return df
 
 def load_latest_raw_csv():
@@ -62,11 +64,11 @@ def save_cleaned_data(df, filename_prefix):
 
     csv_path = os.path.join(CLEAN_DATA_DIR, f"{filename_prefix}.csv")
     json_path = os.path.join(CLEAN_DATA_DIR, f"{filename_prefix}.ndjson")
-
     df.to_csv(csv_path, index=False)
     df.to_json(json_path, orient="records", lines=True, date_format="iso")
 
     print(f"[✓] Cleaned data saved to:\n  - {csv_path}\n  - {json_path}")
+    return json_path
 
 def run_cleaning_pipeline():
     input_file = load_latest_raw_csv()
@@ -76,8 +78,8 @@ def run_cleaning_pipeline():
 
     month_tag = datetime.today().strftime("%Y-%m")
     filename_prefix = f"msedcl_clean_{month_tag}"
-    save_cleaned_data(df_clean, filename_prefix)
-    return df_clean
+    json_path = save_cleaned_data(df_clean, filename_prefix)
+    return [df_clean,json_path]
 
 if __name__ == "__main__":
     run_cleaning_pipeline()
