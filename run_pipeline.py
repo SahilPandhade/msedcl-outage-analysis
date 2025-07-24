@@ -1,5 +1,4 @@
 # run_pipeline.py
-
 import os
 from data_pipeline.fetch.fetch_msedcl import fetch_msedcl_outage_data
 from data_pipeline.clean.clean_msedcl import run_cleaning_pipeline
@@ -12,36 +11,37 @@ from utils.month_state import (
 
 def run_pipeline():
     print("🚀 Starting UrjaDrishti pipeline")
-
+    month_available_array = ['2501','2502','2503','2504','2505']
     # Step 1: Calculate which month to fetch
-    month_tag = get_last_month_tag()  # e.g., '2025-06'
+    for month_tag in month_available_array:
+    #month_tag = get_last_month_tag()  # e.g., '2025-06'
 
-    print(f"📅 Target month: {month_tag}")
+     print(f"📅 Target month: {month_tag}")
 
-    # Step 2: Check if this month’s data was already pushed
-    if is_already_pushed(month_tag):
+        # Step 2: Check if this month’s data was already pushed
+     if is_already_pushed(month_tag):
         print(f"✅ Data for {month_tag} already pushed to BigQuery — skipping pipeline.")
-        return
+        continue
+ 
+     print(f"📥 Fetching and processing data for {month_tag}...")
 
-    print(f"📥 Fetching and processing data for {month_tag}...")
-
-    # Step 3: Fetch data for the month
-    try:
-        raw_csv_path = fetch_msedcl_outage_data(month_tag)
-    except Exception as e:
+     # Step 3: Fetch data for the month
+     try:
+         raw_csv_path = fetch_msedcl_outage_data(month_tag)
+     except Exception as e:
         print(f"Error fetching data for {month_tag}: {e}")
         return
-    try:
+     try:
         if raw_csv_path.empty:
             raise ValueError("No data fetched, raw_csv_path is empty.")
-    except ValueError as ve:
+     except ValueError as ve:
         print(f"Error: {ve}")
         return
-    # Step 4: Clean and transform the data
-    #cleaned_file_path = run_cleaning_pipeline(month_tag, raw_csv_path)
-    cleaned_file_path = run_cleaning_pipeline()[0]
-    file_path = run_cleaning_pipeline()[1]
-    try:
+     # Step 4: Clean and transform the data
+     #cleaned_file_path = run_cleaning_pipeline(month_tag, raw_csv_path)
+     cleaned_file_path = run_cleaning_pipeline()[0]
+     file_path = run_cleaning_pipeline()[1]
+     try:
         if cleaned_file_path.empty:
             raise ValueError("No cleaned data file generated.")
         #Step 5: Load to BigQuery
@@ -49,10 +49,11 @@ def run_pipeline():
         # Step 6: Record successful load
         mark_as_pushed(month_tag)
         print(f"✅ Pipeline completed for {month_tag}. Data pushed to BigQuery and marked as processed.")
-    except Exception as e:
+     except Exception as e:
         print(f"Error loading data to BigQuery: {e}")
         return
-    
-    print("🚀 Pipeline execution finished.")
+     print(f"🚀 Pipeline execution for {month_tag} finished.")
+
+     print("All months successfully processed.Pipeline execution completed.")
 
 run_pipeline()

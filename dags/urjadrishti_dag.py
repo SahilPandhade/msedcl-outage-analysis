@@ -17,8 +17,8 @@ default_args = {
 with DAG(
     dag_id="urjadrishti_dag",
     default_args=default_args,
-    # schedule_interval="0 7 */7 * *",  # every 7 days at 7 AM
-    schedule_interval="*/10 * * * *",
+    schedule_interval="0 7 */7 * *",  # every 7 days at 7 AM
+    #schedule_interval="*/10 * * * *",
     catchup=False,
     tags=["msedcl", "bq", "monthly"],
 ) as dag:

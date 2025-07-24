@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 import os
 
-def fetch_msedcl_outage_json(fetch_month="2505", fetch_type="SUPPLYHR_DATA"):
+def fetch_msedcl_outage_json(fetch_month, fetch_type="SUPPLYHR_DATA"):
     url = "https://www.mahadiscom.in/consumer/ajax/fetch_divisionwise_outage.php"
     
     payload = {
