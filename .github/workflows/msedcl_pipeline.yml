@@ -23,6 +23,8 @@ jobs:
 
     - name: Run UrjaDrishti Pipeline
       env:
+        RAW_DATA_DIR: data/raw
+        CLEAN_DATA_DIR: data/clean
         FETCH_URL: ${{ secrets.FETCH_URL }}
         FETCH_TYPE: ${{ secrets.FETCH_TYPE }}
         USER_AGENT: ${{ secrets.USER_AGENT }}
