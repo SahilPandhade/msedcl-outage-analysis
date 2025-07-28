@@ -79,7 +79,7 @@ def run_cleaning_pipeline():
     month_tag = datetime.today().strftime("%Y-%m")
     filename_prefix = f"msedcl_clean_{month_tag}"
     json_path = save_cleaned_data(df_clean, filename_prefix)
-    return [df_clean,json_path]
+    return df_clean,json_path
 
 if __name__ == "__main__":
     run_cleaning_pipeline()

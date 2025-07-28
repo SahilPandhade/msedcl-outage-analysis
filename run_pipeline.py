@@ -39,8 +39,8 @@ def run_pipeline():
         return
      # Step 4: Clean and transform the data
      #cleaned_file_path = run_cleaning_pipeline(month_tag, raw_csv_path)
-     cleaned_file_path = run_cleaning_pipeline()[0]
-     file_path = run_cleaning_pipeline()[1]
+     cleaned_file_path,file_path = run_cleaning_pipeline()
+     #file_path = run_cleaning_pipeline()[1]
      try:
         if cleaned_file_path.empty:
             raise ValueError("No cleaned data file generated.")
