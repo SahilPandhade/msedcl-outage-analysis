@@ -3,7 +3,6 @@ urja-drishti-key.json
 node_modules/
 .DS_Store
 logs/
-data/
 dags/__pycache__/
 data_pipeline/fetch/__pycache__/
 data_pipeline/transform/__pycache__/
@@ -11,3 +10,4 @@ data_pipeline/load/__pycache__/
 data_pipeline/clean/__pycache__/
 __pycache__/
 data/clean/
+data/raw/
