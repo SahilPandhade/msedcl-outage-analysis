@@ -23,6 +23,9 @@ jobs:
 
     - name: Run UrjaDrishti Pipeline
       env:
+        FETCH_URL: ${{ secrets.FETCH_URL }}
+        FETCH_TYPE: ${{ secrets.FETCH_TYPE }}
+        USER_AGENT: ${{ secrets.USER_AGENT }}
         PROJECT_ID: ${{ secrets.PROJECT_ID }}
         DATASET_NAME: ${{ secrets.DATASET_NAME }}
         TABLE_NAME: ${{ secrets.TABLE_NAME }}
