@@ -67,7 +67,7 @@ def fetch_msedcl_outage_data(fetch_month, fetch_type=DEFAULT_FETCH_TYPE):
     df.to_json(json_path, orient="records", indent=2)
 
     print(f"[✓] Raw data saved to:\n  - {csv_path}\n  - {json_path}")
-    return df
+    return df,csv_path
 
 if __name__ == "__main__":
     fetch_msedcl_outage_data()

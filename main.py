@@ -24,7 +24,8 @@ def run_pipeline():
 
      # Step 3: Fetch data for the month
     try:
-         raw_csv_path = fetch_msedcl_outage_data(month_tag)
+         raw_csv_path = fetch_msedcl_outage_data(month_tag)[0]
+         raw_csv_file = fetch_msedcl_outage_data(month_tag)[1]
     except Exception as e:
         print(f"Error fetching data for {month_tag}: {e}")
         return
@@ -36,7 +37,7 @@ def run_pipeline():
         return
      # Step 4: Clean and transform the data
      #cleaned_file_path = run_cleaning_pipeline(month_tag, raw_csv_path)
-    cleaned_file_path,file_path = run_cleaning_pipeline()
+    cleaned_file_path,file_path = run_cleaning_pipeline(raw_csv_file)
     #file_path = run_cleaning_pipeline()[1]
     try:
         if cleaned_file_path.empty:
