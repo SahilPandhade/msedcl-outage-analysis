@@ -72,7 +72,8 @@ def save_cleaned_data(df, filename_prefix):
 
 def run_cleaning_pipeline(raw_csv_file):
     #input_file = load_latest_raw_csv()
-    print(f"[ℹ] Cleaning file: {input_file}")
+    #print(f"[ℹ] Cleaning file: {input_file}")
+    
     #df_raw = pd.read_csv(input_file)
     df_raw = pd.read_csv(raw_csv_file)
     df_clean = clean_msedcl_dataframe(df_raw)
