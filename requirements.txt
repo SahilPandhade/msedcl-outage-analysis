@@ -4,3 +4,6 @@ requests
 google-cloud-bigquery
 db-dtypes
 PyYAML
+streamlit
+plotly
+
