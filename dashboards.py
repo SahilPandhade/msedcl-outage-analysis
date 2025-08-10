@@ -20,7 +20,7 @@ def get_gcp_credentials():
         return None  # BigQuery will auto-use the env variable
 
     # Case 2: Running on Streamlit Cloud, use st.secrets
-    if "GOOGLE_APPLICATION_CREDENTIALS" in st.secrets:
+    if "GOOGLE_APPLICATION_CREDENTIALS_JSON" in st.secrets:
         if isinstance(raw_secret, str):
             creds_dict = json.loads(raw_secret,strict=False)
         elif isinstance(raw_secret, dict):
