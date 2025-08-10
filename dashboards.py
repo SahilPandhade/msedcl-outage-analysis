@@ -1,15 +1,42 @@
 import os
+import json
 import pandas as pd
 import streamlit as st
 import plotly.express as px
 from google.cloud import bigquery
 from dotenv import load_dotenv
+from google.oauth2 import service_account
 
 # Load environment variables
 load_dotenv()
-PROJECT_ID = os.getenv("PROJECT_ID")
-DATASET = os.getenv("DATASET_NAME")
-TABLE = os.getenv("TABLE_NAME")
+PROJECT_ID = os.getenv("PROJECT_ID") or st.secrets["PROJECT_ID"]
+DATASET = os.getenv("DATASET_NAME") or st.secrets["DATASET_NAME"]
+TABLE = os.getenv("TABLE_NAME") or st.secrets["TABLE_NAME"]
+raw_secret = st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
+
+def get_gcp_credentials():
+    # Case 1: Running locally with GOOGLE_APPLICATION_CREDENTIALS
+    if os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
+        return None  # BigQuery will auto-use the env variable
+
+    # Case 2: Running on Streamlit Cloud, use st.secrets
+    if "gcp_service_account" in st.secrets:
+        if isinstance(raw_secret, str):
+            creds_dict = json.loads(raw_secret,strict=False)
+        elif isinstance(raw_secret, dict):
+            creds_dict = raw_secret
+        else:
+            raise ValueError("Unexpected format for gcp_service_account secret")
+        return service_account.Credentials.from_service_account_info(creds_dict)
+
+    raise RuntimeError("No GCP credentials found in environment or secrets.")
+
+# Get credentials
+creds = get_gcp_credentials()
+# Load JSON from Streamlit secrets
+#service_account_info = json.loads(st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"])
+# Authenticate
+#credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
 st.set_page_config(page_title="UrjaDrishti Dashboard", layout="wide")
 st.title("⚡ UrjaDrishti: Maharashtra Grid Health Dashboard")
@@ -17,7 +44,10 @@ st.title("⚡ UrjaDrishti: Maharashtra Grid Health Dashboard")
 # Load data from BigQuery
 @st.cache_data(ttl=3600)
 def load_data():
-    client = bigquery.Client(project=PROJECT_ID)
+    if creds:
+        client = bigquery.Client(credentials=creds, project=PROJECT_ID)
+    else:
+        client = bigquery.Client(project=PROJECT_ID)
     query = f"""
         SELECT *
         FROM `{PROJECT_ID}.{DATASET}.{TABLE}`
